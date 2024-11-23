@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Tarefas</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        form {
+            margin-bottom: 20px;
+        }
+        input[type="text"], select {
+            padding: 5px;
+            width: calc(100% - 10px);
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #28a745;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        button.delete {
+            background-color: #dc3545;
+        }
+        button:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sistema de Tarefas</h1>
+
+    <!-- Formulário para adicionar tarefa -->
+    <form action="/add" method="POST">
+        <input type="text" name="title" placeholder="Título da tarefa" required>
+        <input type="text" name="description" placeholder="Descrição (opcional)">
+        <button type="submit">Adicionar</button>
+    </form>
+
+    <!-- Lista de tarefas -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Descrição</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for task in tasks %}
+            <tr>
+                <td>{{ task[0] }}</td>
+                <td>{{ task[1] }}</td>
+                <td>{{ task[2] }}</td>
+                <td>
+                    <form action="/update/{{ task[0] }}" method="POST" style="display:inline;">
+                        <select name="status">
+                            <option value="Pending" {% if task[3] == "Pending" %}selected{% endif %}>Pendente</option>
+                            <option value="Completed" {% if task[3] == "Completed" %}selected{% endif %}>Concluida</option>
+                        </select>
+                        <button type="submit">Atualizar</button>
+                    </form>
+                </td>
+                <td>
+                    <a href="/delete/{{ task[0] }}">
+                        <button class="delete">Excluir</button>
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
